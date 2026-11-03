@@ -4,9 +4,15 @@ Equipe: ***
 
 Protótipo estático Garagem, em português do Brasil, para visualizar o painel de um veículo, consultar o wireframe e ler os requisitos iniciais do produto.
 
-## Acessar o repositório
+## Acessar o site
 
-O projeto está disponível no [repositório GitHub](https://github.com/patryckgtoliveira-cpu/mecanica-historico-veicular). O GitHub não publica nem executa o `index.html` no domínio `github.com`; para abrir o protótipo, baixe ou clone o repositório e abra o arquivo localmente no navegador.
+O endereço temporário do GitHub Pages é:
+
+**https://patryckgtoliveira-cpu.github.io/mecanica-historico-veicular/**
+
+Para publicar sem Actions ou arquivos em `.github/workflows`, habilite o Pages uma vez em [Settings → Pages](https://github.com/patryckgtoliveira-cpu/mecanica-historico-veicular/settings/pages): em **Build and deployment**, selecione **Deploy from a branch**, escolha a branch `main` e a pasta `/(root)`, e clique em **Save**. O GitHub publicará o `index.html` e atualizará o site a partir da branch. O link acima só abrirá o site depois que essa configuração for salva.
+
+O código-fonte continua disponível no [repositório GitHub](https://github.com/patryckgtoliveira-cpu/mecanica-historico-veicular).
 
 ## Arquivos
 
