@@ -282,8 +282,28 @@
   <dialog id="entry-dialog" aria-labelledby="dialog-title">
     <div class="dialog-head"><h2 id="dialog-title">Registrar manutenção</h2><p>Adicione um serviço ao prontuário do seu veículo.</p></div>
     <form class="dialog-body" id="entry-form" novalidate>
-      <div class="form-field"><label for="maintenance-type">Tipo de manutenção</label><select id="maintenance-type" name="maintenanceType" required aria-describedby="maintenance-type-error"><option value="">Selecione o tipo</option><option>Revisão periódica</option><option>Óleo e filtros</option><option>Freios</option><option>Pneus e alinhamento</option><option>Bateria e elétrica</option><option>Suspensão</option><option>Ar-condicionado</option><option>Outro</option></select><div class="form-error" id="maintenance-type-error"></div></div>
-      <div class="form-field"><label for="service">Serviço realizado</label><input id="service" name="service" required maxlength="70" placeholder="Ex.: troca de óleo" aria-describedby="service-error"><div class="form-error" id="service-error"></div></div>
+      <div class="form-field">
+        <label for="maintenance-type">Tipo de manutenção realizada</label>
+        <select id="maintenance-type" name="maintenanceType" required aria-describedby="maintenance-type-error">
+          <option value="">Selecione o tipo realizado</option>
+          <option>Revisão periódica</option>
+          <option>Troca de óleo e filtros</option>
+          <option>Freios (pastilhas ou discos)</option>
+          <option>Pneus, alinhamento e balanceamento</option>
+          <option>Bateria</option>
+          <option>Sistema elétrico</option>
+          <option>Suspensão e direção</option>
+          <option>Ar-condicionado</option>
+          <option>Motor</option>
+          <option>Câmbio e transmissão</option>
+          <option>Arrefecimento</option>
+          <option>Correias</option>
+          <option>Funilaria e pintura</option>
+          <option>Outra manutenção</option>
+        </select>
+        <div class="form-error" id="maintenance-type-error"></div>
+      </div>
+      <div class="form-field"><label for="service">Serviço executado (detalhe)</label><input id="service" name="service" required maxlength="70" placeholder="Ex.: substituição das pastilhas dianteiras" aria-describedby="service-error"><div class="form-error" id="service-error"></div></div>
       <div class="form-field"><label for="service-date">Data</label><input id="service-date" name="date" type="date" required aria-describedby="date-error"><div class="form-error" id="date-error"></div></div>
       <div class="form-field"><label for="odometer">Quilometragem (km)</label><input id="odometer" name="odometer" type="number" min="0" max="9999999" required placeholder="Ex.: 48260" aria-describedby="odometer-error"><div class="form-error" id="odometer-error"></div></div>
       <div class="form-field"><label for="workshop">Oficina (opcional)</label><input id="workshop" name="workshop" maxlength="70" placeholder="Nome da oficina"></div>
