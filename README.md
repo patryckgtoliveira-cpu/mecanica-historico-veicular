@@ -10,7 +10,7 @@ O site publicado pelo GitHub Pages estará disponível em:
 
 https://patryckgtoliveira-cpu.github.io/mecanica-historico-veicular/
 
-O deploy é executado automaticamente a cada atualização da branch `main`.
+Na primeira publicação, habilite o GitHub Pages em [Settings → Pages](https://github.com/patryckgtoliveira-cpu/mecanica-historico-veicular/settings/pages), escolhendo **GitHub Actions** como origem de build e deploy. Depois, execute novamente o workflow **Deploy site to GitHub Pages** na aba **Actions**. As próximas atualizações da branch `main` serão publicadas automaticamente.
 
 ## Arquivos
 
