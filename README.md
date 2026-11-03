@@ -32,9 +32,9 @@ Para imprimir uma tela específica, use:
 
 ## Registro de manutenção
 
-O formulário exige serviço, data e quilometragem. O valor e a oficina são opcionais; campos inválidos exibem mensagens junto aos respectivos controles e recebem foco. Ao salvar, o registro é inserido no início do histórico e a contagem é atualizada.
+O formulário exige serviço, data e quilometragem. O valor e a oficina são opcionais; campos inválidos exibem mensagens junto aos respectivos controles e recebem foco. Ao salvar, o registro é inserido no início do histórico e a contagem é atualizada. O perfil demonstrativo aceita nome e e-mail, sem senha; também é possível selecionar uma oficina de exemplo ou informar outra. A oficina salva é sugerida no formulário de manutenção.
 
-Os registros são mantidos apenas na página aberta: recarregar ou fechar o navegador os descarta. Veículo, pessoa, histórico e valores apresentados são demonstrativos, e os avisos de documentos não consultam calendários oficiais.
+O perfil e a oficina preferida são guardados no armazenamento local do navegador e não são enviados a um servidor. Isso não cria uma conta autenticada nem sincroniza os dados entre dispositivos. Os registros de manutenção são mantidos apenas na página aberta: recarregar ou fechar o navegador os descarta. Veículo, histórico e valores apresentados são demonstrativos, e os avisos de documentos não consultam calendários oficiais.
 
 ## Organização do código
 

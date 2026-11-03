@@ -38,6 +38,7 @@ Motoristas particulares que cuidam do próprio veículo, mas não necessariament
 | RF06 | Anexar e consultar comprovantes associados a um registro. | Importante |
 | RF07 | Exibir resumo de serviços e despesas registrados. | Importante |
 | RF08 | Gerar uma apresentação ou exportação do prontuário para apoiar a revenda. | Futuro |
+| RF09 | Manter um perfil do motorista e sua oficina preferida associados ao veículo. | Importante |
 
 ### Não funcionais
 
@@ -79,7 +80,7 @@ O objetivo é testar se a ação prioritária está evidente e se a informação
 
 ## Protótipo de alta fidelidade
 
-O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão de registro abre um formulário validado e insere um novo item no histórico local da sessão.
+O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão de registro abre um formulário validado e insere um novo item no histórico local da sessão. O perfil demonstrativo aceita nome e e-mail, e a preferência da oficina pode ser selecionada da lista ou informada pelo usuário.
 
 ### Decisões de interface
 
@@ -87,11 +88,12 @@ O protótipo navegável também está em [index.html](./index.html), sem depend�
 - Histórico recente em primeiro plano, com data, serviço, quilometragem, oficina, status e valor.
 - Alerta documental contextual, sem simular integração com Detran ou dados oficiais.
 - Ação de registro disponível diretamente na visão geral.
+- Perfil local sem senha e seleção de oficina preferida, reutilizada como sugestão no registro de manutenção.
 - Layout adaptado a telas estreitas e controles com foco visível.
 
 ### Limites do protótipo
 
-Os dados da tela são demonstrativos, incluindo veículo, pessoa, histórico, valores e datas. O alerta orienta a consultar o calendário oficial e não representa uma consulta ao Detran. O formulário atualiza apenas a página no navegador; não existe persistência, autenticação, upload de comprovantes, integração com calendário oficial, notificações reais ou exportação de prontuário.
+Os dados da tela são demonstrativos, incluindo veículo, pessoa, histórico, valores e datas. O perfil e a oficina preferida ficam no armazenamento local do navegador; isso não cria uma conta autenticada nem sincroniza informações entre dispositivos. Os registros de manutenção ainda existem apenas na sessão da página. O alerta orienta a consultar o calendário oficial e não representa uma consulta ao Detran. Não há upload de comprovantes, integração com calendário oficial, notificações reais ou exportação de prontuário.
 
 ## Critérios de aceite para validação
 

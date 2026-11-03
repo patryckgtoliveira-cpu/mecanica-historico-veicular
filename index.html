@@ -24,10 +24,14 @@
           <p>Encontre respostas para organizar o histórico do seu veículo.</p>
           <button class="text-button" data-toast="Central de ajuda: conteúdo demonstrativo do protótipo.">Acessar ajuda</button>
         </div>
-        <div class="profile">
-          <div class="avatar" aria-hidden="true">MC</div>
-          <div><div class="profile-name">Marina Costa</div><div class="profile-plan">Conta pessoal</div></div>
-        </div>
+        <button class="profile profile-trigger" type="button" data-open-account aria-label="Criar perfil de conta">
+          <span class="avatar" aria-hidden="true" data-account-initials>MC</span>
+          <span class="profile-copy">
+            <span class="profile-name" data-account-name>Marina Costa</span>
+            <span class="profile-plan" data-account-detail>Perfil demonstrativo</span>
+          </span>
+          <span class="profile-edit" aria-hidden="true">Editar</span>
+        </button>
       </div>
     </aside>
 
@@ -37,7 +41,7 @@
         <div class="breadcrumb">Meu espaço <span aria-hidden="true">/</span> <strong id="breadcrumb-current">Visão geral</strong></div>
         <div class="top-actions">
           <button class="icon-button" aria-label="Ver notificações" data-toast="Você está em dia. Nenhuma notificação nova.">N</button>
-          <div class="avatar" aria-label="Perfil de Marina Costa">MC</div>
+          <button class="avatar avatar-trigger" type="button" data-open-account aria-label="Criar perfil de conta" data-account-initials>MC</button>
         </div>
       </header>
       <nav class="mobile-tabs" aria-label="Navegação do protótipo">
@@ -76,6 +80,37 @@
                 <circle cx="421" cy="145" r="24" fill="#29332d"/><circle cx="421" cy="145" r="11" fill="#dce4df"/>
               </svg>
             </div>
+          </section>
+
+          <section class="panel workshop-panel" aria-labelledby="workshop-heading">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title" id="workshop-heading">Sua oficina de confiança</h2>
+                <p class="workshop-description">Escolha onde costuma levar o carro. Essa preferência também aparece ao registrar uma manutenção.</p>
+              </div>
+              <span class="workshop-current" id="workshop-current">Nenhuma oficina selecionada</span>
+            </div>
+            <form class="workshop-form" id="workshop-form" novalidate>
+              <div class="form-field workshop-field">
+                <label for="preferred-workshop">Oficina preferida</label>
+                <select id="preferred-workshop" name="preferredWorkshop" required aria-describedby="workshop-error">
+                  <option value="">Selecione uma oficina</option>
+                  <option value="Oficina Avenida">Oficina Avenida</option>
+                  <option value="Auto Center Sul">Auto Center Sul</option>
+                  <option value="Mecânica Central">Mecânica Central</option>
+                  <option value="custom">Outra oficina</option>
+                </select>
+                <div class="form-error" id="workshop-error"></div>
+              </div>
+              <div class="form-field workshop-field workshop-custom" id="custom-workshop-field" hidden>
+                <label for="custom-workshop">Nome da oficina</label>
+                <input id="custom-workshop" name="customWorkshop" maxlength="70" placeholder="Digite o nome da oficina" aria-describedby="workshop-error">
+              </div>
+              <div class="workshop-actions">
+                <span class="workshop-note">Salvo apenas neste navegador. Não é uma reserva.</span>
+                <button class="primary-button" type="submit">Salvar oficina</button>
+              </div>
+            </form>
           </section>
 
           <div class="overview-grid">
@@ -201,6 +236,7 @@
                 <li><span class="priority">RF04</span> Configurar lembretes de manutenção por data ou quilometragem.</li>
                 <li><span class="priority">RF05</span> Acompanhar datas de IPVA e licenciamento, com estado e ano informados pelo usuário.</li>
                 <li><span class="priority">RF06</span> Anexar comprovantes e consultar o resumo de despesas.</li>
+                <li><span class="priority">RF07</span> Criar perfil local e selecionar uma oficina preferida para os registros de manutenção.</li>
               </ul>
             </article>
             <article class="panel requirement-panel">
@@ -249,6 +285,28 @@
       <div class="form-field"><label for="workshop">Oficina (opcional)</label><input id="workshop" name="workshop" maxlength="70" placeholder="Nome da oficina"></div>
       <div class="form-field"><label for="amount">Valor (R$)</label><input id="amount" name="amount" type="number" min="0" max="999999" step="0.01" placeholder="Ex.: 250,00" aria-describedby="amount-error"><div class="form-error" id="amount-error"></div></div>
       <div class="dialog-actions"><button type="button" class="secondary-button" id="close-dialog">Cancelar</button><button type="submit" class="primary-button">Salvar registro</button></div>
+    </form>
+  </dialog>
+  <dialog id="account-dialog" aria-labelledby="account-dialog-title">
+    <div class="dialog-head">
+      <h2 id="account-dialog-title">Criar seu perfil</h2>
+      <p>Seu perfil fica salvo apenas neste navegador. Este protótipo não cria login online e não pede senha.</p>
+    </div>
+    <form class="dialog-body" id="account-form" novalidate>
+      <div class="form-field">
+        <label for="account-name">Seu nome</label>
+        <input id="account-name" name="name" required maxlength="60" autocomplete="name" placeholder="Ex.: Ana Silva" aria-describedby="account-name-error">
+        <div class="form-error" id="account-name-error"></div>
+      </div>
+      <div class="form-field">
+        <label for="account-email">E-mail</label>
+        <input id="account-email" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="voce@exemplo.com" aria-describedby="account-email-error">
+        <div class="form-error" id="account-email-error"></div>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-button" id="close-account-dialog">Cancelar</button>
+        <button type="submit" class="primary-button">Salvar perfil</button>
+      </div>
     </form>
   </dialog>
   <script src="app.js" defer></script>
