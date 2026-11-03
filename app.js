@@ -11,6 +11,8 @@ const breadcrumb = document.querySelector("#breadcrumb-current");
 const content = document.querySelector("#conteudo");
 const dialog = document.querySelector("#entry-dialog");
 const form = document.querySelector("#entry-form");
+const vehicleDialog = document.querySelector("#vehicle-dialog");
+const vehicleForm = document.querySelector("#vehicle-form");
 const accountDialog = document.querySelector("#account-dialog");
 const accountForm = document.querySelector("#account-form");
 const workshopForm = document.querySelector("#workshop-form");
@@ -21,6 +23,15 @@ const toast = document.querySelector("#toast");
 const timeline = document.querySelector("#timeline");
 const serviceCount = document.querySelector("#service-count");
 const userSettingsKey = "garagem.user-settings";
+const defaultVehicle = {
+  make: "Honda",
+  model: "HR-V",
+  version: "EXL",
+  year: 2021,
+  fuel: "Flex",
+  plate: "ABC1D23",
+  odometer: 48260
+};
 
 let toastTimer;
 let userSettings = loadUserSettings();
@@ -28,7 +39,7 @@ let userSettings = loadUserSettings();
 function loadUserSettings() {
   try {
     const storedSettings = window.localStorage.getItem(userSettingsKey);
-    if (!storedSettings) return { account: null, workshop: "" };
+    if (!storedSettings) return { account: null, workshop: "", vehicle: { ...defaultVehicle } };
 
     const parsedSettings = JSON.parse(storedSettings);
     if (!parsedSettings || typeof parsedSettings !== "object") {
@@ -40,13 +51,28 @@ function loadUserSettings() {
       account: account && typeof account.name === "string" && typeof account.email === "string"
         ? { name: account.name, email: account.email }
         : null,
-      workshop: typeof parsedSettings.workshop === "string" ? parsedSettings.workshop : ""
+      workshop: typeof parsedSettings.workshop === "string" ? parsedSettings.workshop : "",
+      vehicle: normalizeVehicle(parsedSettings.vehicle)
     };
   } catch (error) {
     console.error("Não foi possível carregar as configurações locais.", error);
     showToast("Não foi possível carregar seu perfil salvo neste navegador.");
-    return { account: null, workshop: "" };
+    return { account: null, workshop: "", vehicle: { ...defaultVehicle } };
   }
+}
+
+function normalizeVehicle(vehicle) {
+  if (!vehicle || typeof vehicle !== "object") return { ...defaultVehicle };
+
+  return {
+    make: typeof vehicle.make === "string" ? vehicle.make : defaultVehicle.make,
+    model: typeof vehicle.model === "string" ? vehicle.model : defaultVehicle.model,
+    version: typeof vehicle.version === "string" ? vehicle.version : defaultVehicle.version,
+    year: Number.isInteger(vehicle.year) ? vehicle.year : defaultVehicle.year,
+    fuel: typeof vehicle.fuel === "string" ? vehicle.fuel : defaultVehicle.fuel,
+    plate: typeof vehicle.plate === "string" ? vehicle.plate : defaultVehicle.plate,
+    odometer: Number.isInteger(vehicle.odometer) ? vehicle.odometer : defaultVehicle.odometer
+  };
 }
 
 function saveUserSettings(nextSettings) {
@@ -115,6 +141,96 @@ function renderPreferredWorkshop() {
   document.querySelector("#workshop-current").textContent = userSettings.workshop
     ? `Oficina: ${userSettings.workshop}`
     : "Nenhuma oficina selecionada";
+}
+
+function renderVehicle() {
+  const { make, model, version, year, fuel, plate, odometer } = userSettings.vehicle;
+  document.querySelector("#vehicle-name").textContent = [make, model, version]
+    .filter(Boolean)
+    .join(" ");
+  document.querySelector("#vehicle-summary").textContent = `${year} · ${fuel} · ${plate}`;
+  document.querySelector("#vehicle-odometer").textContent =
+    `${odometer.toLocaleString("pt-BR")} km`;
+}
+
+function openVehicleDialog() {
+  Object.entries(userSettings.vehicle).forEach(([field, value]) => {
+    vehicleForm.elements[field].value = String(value);
+  });
+  clearVehicleErrors();
+  vehicleDialog.showModal();
+  vehicleForm.elements.make.focus();
+}
+
+function clearVehicleErrors() {
+  vehicleForm.querySelectorAll(".form-error").forEach(error => {
+    error.textContent = "";
+  });
+  Object.values(vehicleForm.elements).forEach(element => {
+    if (element instanceof HTMLElement && element.matches("input, select")) {
+      element.removeAttribute("aria-invalid");
+    }
+  });
+}
+
+function validateVehicle() {
+  const make = vehicleForm.elements.make.value.trim();
+  const model = vehicleForm.elements.model.value.trim();
+  const year = Number(vehicleForm.elements.year.value);
+  const fuel = vehicleForm.elements.fuel.value;
+  const plate = vehicleForm.elements.plate.value.trim().toLocaleUpperCase("pt-BR");
+  const rawOdometer = vehicleForm.elements.odometer.value;
+  const odometer = Number(rawOdometer);
+  const currentYear = new Date().getFullYear();
+
+  return {
+    make: make ? "" : "Informe a marca.",
+    model: model ? "" : "Informe o modelo.",
+    year: !Number.isInteger(year) || year < 1900 || year > currentYear + 1
+      ? `Informe um ano entre 1900 e ${currentYear + 1}.`
+      : "",
+    fuel: fuel ? "" : "Selecione o combustível.",
+    plate: /^(?:[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z0-9][0-9]{2})$/.test(plate)
+      ? ""
+      : "Informe uma placa válida (ex.: ABC1D23).",
+    odometer: !rawOdometer || !Number.isInteger(odometer) || odometer < 0
+      ? "Informe uma quilometragem inteira válida."
+      : ""
+  };
+}
+
+function handleVehicleSubmit(event) {
+  event.preventDefault();
+
+  const errors = validateVehicle();
+  Object.entries(errors).forEach(([field, message]) => {
+    document.querySelector(`#vehicle-${field}-error`).textContent = message;
+    vehicleForm.elements[field].setAttribute("aria-invalid", String(Boolean(message)));
+  });
+
+  const firstInvalidField = Object.keys(errors).find(field => errors[field]);
+  if (firstInvalidField) {
+    vehicleForm.elements[firstInvalidField].focus();
+    return;
+  }
+
+  const nextSettings = {
+    ...userSettings,
+    vehicle: {
+      make: vehicleForm.elements.make.value.trim(),
+      model: vehicleForm.elements.model.value.trim(),
+      version: vehicleForm.elements.version.value.trim(),
+      year: Number(vehicleForm.elements.year.value),
+      fuel: vehicleForm.elements.fuel.value,
+      plate: vehicleForm.elements.plate.value.trim().toLocaleUpperCase("pt-BR"),
+      odometer: Number(vehicleForm.elements.odometer.value)
+    }
+  };
+  if (!saveUserSettings(nextSettings)) return;
+
+  renderVehicle();
+  vehicleDialog.close();
+  showToast("Dados do veículo salvos neste navegador.");
 }
 
 function openAccountDialog() {
@@ -228,7 +344,7 @@ function formatDateParts(value) {
   };
 }
 
-function createTimelineEntry({ service, date, odometer, workshop, amount }) {
+function createTimelineEntry({ maintenanceType, service, date, odometer, workshop, amount }) {
   const entry = document.createElement("article");
   entry.className = "timeline-row";
 
@@ -246,10 +362,10 @@ function createTimelineEntry({ service, date, odometer, workshop, amount }) {
   const details = document.createElement("div");
   const eventName = document.createElement("div");
   eventName.className = "event-name";
-  eventName.textContent = service;
+  eventName.textContent = maintenanceType;
   const eventDetail = document.createElement("div");
   eventDetail.className = "event-detail";
-  eventDetail.textContent = `${odometer.toLocaleString("pt-BR")} km · ${workshop}`;
+  eventDetail.textContent = `${service} · ${odometer.toLocaleString("pt-BR")} km · ${workshop}`;
   details.append(eventName, eventDetail);
 
   const status = document.createElement("span");
@@ -273,6 +389,7 @@ function createTimelineEntry({ service, date, odometer, workshop, amount }) {
 }
 
 function validateEntry() {
+  const maintenanceType = form.elements.maintenanceType.value;
   const service = form.elements.service.value.trim();
   const date = form.elements.date.value;
   const rawOdometer = form.elements.odometer.value;
@@ -280,6 +397,7 @@ function validateEntry() {
   const amount = form.elements.amount.value;
 
   return {
+    maintenanceType: maintenanceType ? "" : "Selecione o tipo de manutenção.",
     service: !service ? "Informe o serviço realizado." : "",
     date: !date ? "Informe a data do serviço." : "",
     odometer: !rawOdometer || !Number.isFinite(odometer) || odometer < 0
@@ -293,7 +411,8 @@ function validateEntry() {
 
 function showValidationErrors(errors) {
   Object.entries(errors).forEach(([field, message]) => {
-    document.querySelector(`#${field}-error`).textContent = message;
+    const errorId = field === "maintenanceType" ? "maintenance-type-error" : `${field}-error`;
+    document.querySelector(`#${errorId}`).textContent = message;
     form.elements[field].setAttribute("aria-invalid", message ? "true" : "false");
   });
 
@@ -324,6 +443,7 @@ function handleEntrySubmit(event) {
   if (!showValidationErrors(errors)) return;
 
   const entry = {
+    maintenanceType: form.elements.maintenanceType.value,
     service: form.elements.service.value.trim(),
     date: form.elements.date.value,
     odometer: Number(form.elements.odometer.value),
@@ -349,7 +469,7 @@ function openEntryDialog() {
   form.elements.workshop.value = userSettings.workshop;
   clearValidationErrors();
   dialog.showModal();
-  form.elements.service.focus();
+  form.elements.maintenanceType.focus();
 }
 
 function initializePrintMode() {
@@ -372,6 +492,12 @@ document.querySelectorAll("[data-toast]").forEach(button => {
 
 document.querySelector("#open-entry").addEventListener("click", openEntryDialog);
 document.querySelector("#close-dialog").addEventListener("click", () => dialog.close());
+document.querySelector("#open-vehicle").addEventListener("click", openVehicleDialog);
+document.querySelector("#close-vehicle-dialog").addEventListener("click", () => vehicleDialog.close());
+vehicleDialog.addEventListener("click", event => {
+  if (event.target === vehicleDialog) vehicleDialog.close();
+});
+vehicleForm.addEventListener("submit", handleVehicleSubmit);
 document.querySelectorAll("[data-open-account]").forEach(button => {
   button.addEventListener("click", openAccountDialog);
 });
@@ -396,4 +522,5 @@ form.addEventListener("submit", handleEntrySubmit);
 
 updateAccountUI();
 renderPreferredWorkshop();
+renderVehicle();
 initializePrintMode();

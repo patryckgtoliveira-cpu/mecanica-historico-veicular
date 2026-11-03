@@ -61,10 +61,13 @@
           <section class="vehicle-banner" aria-label="Veículo cadastrado">
             <div class="vehicle-info">
               <div class="vehicle-eyebrow">SEU VEÍCULO</div>
-              <h2 class="vehicle-heading">Honda HR-V EXL</h2>
-              <div class="vehicle-subtitle">2021 <span aria-hidden="true">·</span> Flex <span aria-hidden="true">·</span> ABC1D23</div>
+              <div class="vehicle-title-row">
+                <h2 class="vehicle-heading" id="vehicle-name">Honda HR-V EXL</h2>
+                <button class="secondary-button vehicle-edit" type="button" id="open-vehicle">Editar veículo</button>
+              </div>
+              <div class="vehicle-subtitle" id="vehicle-summary">2021 <span aria-hidden="true">·</span> Flex <span aria-hidden="true">·</span> ABC1D23</div>
               <div class="vehicle-stats">
-                <div><div class="stat-label">Quilometragem</div><div class="stat-value">48.260 km</div></div>
+                <div><div class="stat-label">Quilometragem</div><div class="stat-value" id="vehicle-odometer">48.260 km</div></div>
                 <div><div class="stat-label">Próxima revisão</div><div class="stat-value">Em 1.740 km</div></div>
               </div>
             </div>
@@ -230,8 +233,8 @@
             <article class="panel requirement-panel">
               <h2>Requisitos funcionais</h2>
               <ul>
-                <li><span class="priority">RF01</span> Cadastrar veículo com marca, modelo, ano, placa e quilometragem.</li>
-                <li><span class="priority">RF02</span> Registrar serviço, data, odômetro, oficina, valor e observações.</li>
+                <li><span class="priority">RF01</span> Cadastrar e atualizar os dados do veículo, como marca, modelo, ano, placa e quilometragem.</li>
+                <li><span class="priority">RF02</span> Registrar tipo de manutenção, serviço, data, odômetro, oficina e valor.</li>
                 <li><span class="priority">RF03</span> Consultar histórico de revisões, serviços e peças trocadas por veículo.</li>
                 <li><span class="priority">RF04</span> Configurar lembretes de manutenção por data ou quilometragem.</li>
                 <li><span class="priority">RF05</span> Acompanhar datas de IPVA e licenciamento, com estado e ano informados pelo usuário.</li>
@@ -262,7 +265,7 @@
             <article class="panel requirement-panel">
               <h2>Critérios de aceite essenciais</h2>
               <ul>
-                <li>Um novo serviço deve exigir tipo, data e quilometragem válidos.</li>
+                <li>Uma nova manutenção deve exigir tipo, serviço, data e quilometragem válidos.</li>
                 <li>Após salvar, o serviço deve aparecer no histórico e atualizar a contagem.</li>
                 <li>O usuário deve identificar claramente o vencimento e a ação relacionada.</li>
                 <li>Os dados continuam legíveis em telas estreitas e com teclado.</li>
@@ -279,12 +282,70 @@
   <dialog id="entry-dialog" aria-labelledby="dialog-title">
     <div class="dialog-head"><h2 id="dialog-title">Registrar manutenção</h2><p>Adicione um serviço ao prontuário do seu veículo.</p></div>
     <form class="dialog-body" id="entry-form" novalidate>
+      <div class="form-field"><label for="maintenance-type">Tipo de manutenção</label><select id="maintenance-type" name="maintenanceType" required aria-describedby="maintenance-type-error"><option value="">Selecione o tipo</option><option>Revisão periódica</option><option>Óleo e filtros</option><option>Freios</option><option>Pneus e alinhamento</option><option>Bateria e elétrica</option><option>Suspensão</option><option>Ar-condicionado</option><option>Outro</option></select><div class="form-error" id="maintenance-type-error"></div></div>
       <div class="form-field"><label for="service">Serviço realizado</label><input id="service" name="service" required maxlength="70" placeholder="Ex.: troca de óleo" aria-describedby="service-error"><div class="form-error" id="service-error"></div></div>
       <div class="form-field"><label for="service-date">Data</label><input id="service-date" name="date" type="date" required aria-describedby="date-error"><div class="form-error" id="date-error"></div></div>
       <div class="form-field"><label for="odometer">Quilometragem (km)</label><input id="odometer" name="odometer" type="number" min="0" max="9999999" required placeholder="Ex.: 48260" aria-describedby="odometer-error"><div class="form-error" id="odometer-error"></div></div>
       <div class="form-field"><label for="workshop">Oficina (opcional)</label><input id="workshop" name="workshop" maxlength="70" placeholder="Nome da oficina"></div>
       <div class="form-field"><label for="amount">Valor (R$)</label><input id="amount" name="amount" type="number" min="0" max="999999" step="0.01" placeholder="Ex.: 250,00" aria-describedby="amount-error"><div class="form-error" id="amount-error"></div></div>
       <div class="dialog-actions"><button type="button" class="secondary-button" id="close-dialog">Cancelar</button><button type="submit" class="primary-button">Salvar registro</button></div>
+    </form>
+  </dialog>
+  <dialog id="vehicle-dialog" aria-labelledby="vehicle-dialog-title">
+    <div class="dialog-head">
+      <h2 id="vehicle-dialog-title">Editar veículo</h2>
+      <p>Atualize os dados exibidos no seu painel. As alterações ficam neste navegador.</p>
+    </div>
+    <form class="dialog-body" id="vehicle-form" novalidate>
+      <div class="vehicle-form-grid">
+        <div class="form-field">
+          <label for="vehicle-make">Marca</label>
+          <input id="vehicle-make" name="make" required maxlength="40" placeholder="Ex.: Honda" aria-describedby="vehicle-make-error">
+          <div class="form-error" id="vehicle-make-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="vehicle-model">Modelo</label>
+          <input id="vehicle-model" name="model" required maxlength="50" placeholder="Ex.: HR-V" aria-describedby="vehicle-model-error">
+          <div class="form-error" id="vehicle-model-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="vehicle-version">Versão</label>
+          <input id="vehicle-version" name="version" maxlength="40" placeholder="Ex.: EXL">
+        </div>
+        <div class="form-field">
+          <label for="vehicle-year">Ano</label>
+          <input id="vehicle-year" name="year" type="number" min="1900" max="2100" required placeholder="Ex.: 2021" aria-describedby="vehicle-year-error">
+          <div class="form-error" id="vehicle-year-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="vehicle-fuel">Combustível</label>
+          <select id="vehicle-fuel" name="fuel" required aria-describedby="vehicle-fuel-error">
+            <option value="">Selecione</option>
+            <option>Flex</option>
+            <option>Gasolina</option>
+            <option>Etanol</option>
+            <option>Diesel</option>
+            <option>Elétrico</option>
+            <option>Híbrido</option>
+            <option>Outro</option>
+          </select>
+          <div class="form-error" id="vehicle-fuel-error"></div>
+        </div>
+        <div class="form-field">
+          <label for="vehicle-plate">Placa</label>
+          <input id="vehicle-plate" name="plate" required maxlength="7" placeholder="ABC1D23" aria-describedby="vehicle-plate-error">
+          <div class="form-error" id="vehicle-plate-error"></div>
+        </div>
+        <div class="form-field vehicle-odometer-field">
+          <label for="vehicle-current-odometer">Quilometragem atual (km)</label>
+          <input id="vehicle-current-odometer" name="odometer" type="number" min="0" max="9999999" step="1" required placeholder="Ex.: 48260" aria-describedby="vehicle-odometer-error">
+          <div class="form-error" id="vehicle-odometer-error"></div>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-button" id="close-vehicle-dialog">Cancelar</button>
+        <button type="submit" class="primary-button">Salvar veículo</button>
+      </div>
     </form>
   </dialog>
   <dialog id="account-dialog" aria-labelledby="account-dialog-title">

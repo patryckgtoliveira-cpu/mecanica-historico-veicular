@@ -30,8 +30,8 @@ Motoristas particulares que cuidam do próprio veículo, mas não necessariament
 
 | ID | Requisito | Prioridade |
 |---|---|---|
-| RF01 | Cadastrar um ou mais veículos, com marca, modelo, ano, placa e quilometragem. | Essencial |
-| RF02 | Registrar serviço ou troca de peça com tipo, data, quilometragem, oficina, valor e observações. | Essencial |
+| RF01 | Cadastrar e atualizar dados do veículo, incluindo marca, modelo, ano, placa e quilometragem. | Essencial |
+| RF02 | Registrar serviço ou troca de peça com tipo de manutenção, data, quilometragem, oficina, valor e descrição. | Essencial |
 | RF03 | Consultar o histórico de serviços por veículo, ordenado por data. | Essencial |
 | RF04 | Configurar lembretes de manutenção por data e/ou quilometragem. | Essencial |
 | RF05 | Registrar datas de IPVA e licenciamento considerando estado e ano de referência. | Essencial |
@@ -80,12 +80,14 @@ O objetivo é testar se a ação prioritária está evidente e se a informação
 
 ## Protótipo de alta fidelidade
 
-O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão de registro abre um formulário validado e insere um novo item no histórico local da sessão. O perfil demonstrativo aceita nome e e-mail, e a preferência da oficina pode ser selecionada da lista ou informada pelo usuário.
+O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão **Editar veículo** permite atualizar marca, modelo, versão, ano, combustível, placa e quilometragem, guardando os dados no navegador. O formulário de manutenção exige uma categoria, uma descrição, data e quilometragem e insere o registro no histórico local da sessão. O perfil demonstrativo aceita nome e e-mail, e a preferência da oficina pode ser selecionada da lista ou informada pelo usuário.
 
 ### Decisões de interface
 
 - Painel inicial centrado em um veículo e nas próximas ações.
 - Histórico recente em primeiro plano, com data, serviço, quilometragem, oficina, status e valor.
+- Dados do veículo editáveis, sem apagar o perfil ou a oficina preferida salvos no mesmo navegador.
+- Categoria de manutenção visível no histórico e descrição livre para detalhar o serviço.
 - Alerta documental contextual, sem simular integração com Detran ou dados oficiais.
 - Ação de registro disponível diretamente na visão geral.
 - Perfil local sem senha e seleção de oficina preferida, reutilizada como sugestão no registro de manutenção.

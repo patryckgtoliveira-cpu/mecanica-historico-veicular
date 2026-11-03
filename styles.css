@@ -98,7 +98,9 @@
     }
     .vehicle-info { padding: 25px 28px; }
     .vehicle-eyebrow { color: var(--muted); font-size: 11px; font-weight: 650; }
-    .vehicle-heading { margin: 9px 0 4px; font-size: 24px; letter-spacing: -.5px; }
+    .vehicle-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 4px; }
+    .vehicle-heading { min-width: 0; margin: 0; font-size: 24px; letter-spacing: -.5px; overflow-wrap: anywhere; }
+    .vehicle-edit { flex: 0 0 auto; min-height: 34px; padding: 0 10px; font-size: 10px; }
     .vehicle-subtitle { color: var(--muted); font-size: 12px; }
     .vehicle-stats { display: flex; gap: 32px; margin-top: 24px; }
     .stat-label { color: var(--muted); font-size: 11px; }
@@ -144,7 +146,7 @@
     .date-day { font-size: 14px; font-weight: 750; line-height: 1.1; }
     .date-month { margin-top: 3px; font-size: 9px; font-weight: 650; text-transform: uppercase; }
     .event-name { font-size: 12px; font-weight: 700; }
-    .event-detail { margin-top: 5px; color: var(--muted); font-size: 10px; }
+    .event-detail { margin-top: 5px; color: var(--muted); font-size: 10px; overflow-wrap: anywhere; }
     .event-cost { color: #3d4a43; font-size: 11px; font-weight: 700; white-space: nowrap; }
     .status { display: inline-flex; align-items: center; gap: 5px; width: fit-content; padding: 5px 8px; border-radius: 20px; font-size: 9px; font-weight: 700; white-space: nowrap; }
     .status-done { color: #27684d; background: #eaf4ee; }
@@ -223,6 +225,7 @@
       width: min(460px, calc(100vw - 28px)); padding: 0; border: 1px solid var(--line);
       border-radius: 16px; color: var(--ink); box-shadow: 0 24px 80px rgb(20 38 28 / 25%);
     }
+    #vehicle-dialog { width: min(540px, calc(100vw - 28px)); }
     dialog::backdrop { background: rgb(21 34 27 / 42%); }
     .dialog-head { padding: 20px 22px; border-bottom: 1px solid var(--line); }
     .dialog-head h2 { margin: 0; font-size: 18px; }
@@ -235,6 +238,8 @@
       border-radius: 8px; background: white; color: var(--ink); font-size: 12px;
     }
     .form-error { min-height: 15px; color: var(--danger); font-size: 10px; }
+    .vehicle-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; }
+    .vehicle-odometer-field { grid-column: 1 / -1; }
     .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 17px; }
     .dialog-actions button { min-height: 38px; }
 
@@ -334,6 +339,7 @@
       .welcome { align-items: flex-start; flex-direction: column; margin-bottom: 18px; }
       .vehicle-banner { grid-template-columns: 1fr; }
       .vehicle-info { padding: 21px; }
+      .vehicle-title-row { align-items: flex-start; }
       .vehicle-visual { min-height: 155px; }
       .car-art { width: min(90%, 390px); right: 3%; bottom: 0; }
       .vehicle-stats { gap: 25px; margin-top: 19px; }
@@ -344,6 +350,10 @@
       .wf-main { grid-template-columns: 1fr; }
     }
     @media (max-width: 480px) {
+      .vehicle-title-row { flex-wrap: wrap; }
+      .vehicle-heading { font-size: 21px; }
+      .vehicle-form-grid { grid-template-columns: 1fr; }
+      .vehicle-odometer-field { grid-column: auto; }
       .side-stack { grid-template-columns: 1fr; }
       .workshop-panel .panel-header { flex-direction: column; }
       .workshop-form { flex-direction: column; align-items: stretch; padding: 14px 15px; }
