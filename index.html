@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f6">
+  <title>Garagem | Histórico e cuidado do seu veículo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">G</span><span class="brand-name">Garagem</span></div>
+      <p class="nav-label">Menu</p>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-glyph" aria-hidden="true">⌂</span>Visão geral</button>
+        <button class="nav-item" data-view="wireframe"><span class="nav-glyph" aria-hidden="true">▤</span>Wireframe</button>
+        <button class="nav-item" data-view="requirements"><span class="nav-glyph" aria-hidden="true">✓</span>Requisitos</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-box">
+          <strong>Precisa de ajuda?</strong>
+          <p>Encontre respostas para organizar o histórico do seu veículo.</p>
+          <button class="text-button" data-toast="Central de ajuda: conteúdo demonstrativo do protótipo.">Acessar ajuda</button>
+        </div>
+        <div class="profile">
+          <div class="avatar" aria-hidden="true">MC</div>
+          <div><div class="profile-name">Marina Costa</div><div class="profile-plan">Conta pessoal</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <main id="conteudo" tabindex="-1">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark" aria-hidden="true">G</span>Garagem</div>
+        <div class="breadcrumb">Meu espaço <span aria-hidden="true">/</span> <strong id="breadcrumb-current">Visão geral</strong></div>
+        <div class="top-actions">
+          <button class="icon-button" aria-label="Ver notificações" data-toast="Você está em dia. Nenhuma notificação nova.">N</button>
+          <div class="avatar" aria-label="Perfil de Marina Costa">MC</div>
+        </div>
+      </header>
+      <nav class="mobile-tabs" aria-label="Navegação do protótipo">
+        <button class="nav-item active" data-view="dashboard">Visão geral</button>
+        <button class="nav-item" data-view="wireframe">Wireframe</button>
+        <button class="nav-item" data-view="requirements">Requisitos</button>
+      </nav>
+
+      <div class="content">
+        <section class="view active" id="dashboard" aria-labelledby="dashboard-title">
+          <div class="print-only dashboard-print-title"><h1>Prontuário do veículo</h1><p>Protótipo de alta fidelidade · Visão geral</p></div>
+          <div class="welcome">
+            <div><h1 id="dashboard-title">Bom dia, Marina</h1><p>Acompanhe o cuidado e os próximos compromissos do seu veículo.</p></div>
+            <button class="primary-button" id="open-entry">+ Registrar manutenção</button>
+          </div>
+
+          <section class="vehicle-banner" aria-label="Veículo cadastrado">
+            <div class="vehicle-info">
+              <div class="vehicle-eyebrow">SEU VEÍCULO</div>
+              <h2 class="vehicle-heading">Honda HR-V EXL</h2>
+              <div class="vehicle-subtitle">2021 <span aria-hidden="true">·</span> Flex <span aria-hidden="true">·</span> ABC1D23</div>
+              <div class="vehicle-stats">
+                <div><div class="stat-label">Quilometragem</div><div class="stat-value">48.260 km</div></div>
+                <div><div class="stat-label">Próxima revisão</div><div class="stat-value">Em 1.740 km</div></div>
+              </div>
+            </div>
+            <div class="vehicle-visual" role="img" aria-label="Ilustração decorativa de um veículo">
+              <span class="vehicle-tag">Dados de exemplo</span>
+              <svg class="car-art" viewBox="0 0 520 190" aria-hidden="true">
+                <ellipse cx="270" cy="164" rx="210" ry="14" fill="#688b75" opacity=".16"/>
+                <path d="M62 128c8-17 16-25 38-31l75-18 48-45c9-9 18-13 34-13h91c17 0 29 7 41 20l38 42 40 12c17 5 25 18 25 35v16H55v-7c0-5 2-9 7-11Z" fill="#f9fbf9" stroke="#47725a" stroke-width="4" stroke-linejoin="round"/>
+                <path d="m193 78 44-42c5-5 12-8 22-8h34v50h-100Zm112-50h41c11 0 19 5 27 14l32 36H305V28Z" fill="#dbe8df" stroke="#47725a" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M59 119h442M303 29v50m-108-1h112" fill="none" stroke="#47725a" stroke-width="3"/>
+                <path d="M79 105h35m344 0h21" stroke="#e1a65f" stroke-width="6" stroke-linecap="round"/>
+                <circle cx="147" cy="145" r="24" fill="#29332d"/><circle cx="147" cy="145" r="11" fill="#dce4df"/>
+                <circle cx="421" cy="145" r="24" fill="#29332d"/><circle cx="421" cy="145" r="11" fill="#dce4df"/>
+              </svg>
+            </div>
+          </section>
+
+          <div class="overview-grid">
+            <section class="panel" aria-labelledby="history-heading">
+              <div class="panel-header"><h2 class="panel-title" id="history-heading">Histórico recente</h2><button class="panel-link" data-toast="O histórico completo estará disponível na próxima etapa do produto.">Ver histórico completo</button></div>
+              <div class="timeline" id="timeline">
+                <article class="timeline-row">
+                  <div class="date-block"><span class="date-day">18</span><span class="date-month">ago</span></div>
+                  <div><div class="event-name">Troca de óleo e filtro</div><div class="event-detail">48.120 km <span aria-hidden="true">·</span> Oficina Avenida</div></div>
+                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
+                  <span class="event-cost">R$ 389,90</span>
+                </article>
+                <article class="timeline-row">
+                  <div class="date-block"><span class="date-day">02</span><span class="date-month">jun</span></div>
+                  <div><div class="event-name">Revisão dos freios</div><div class="event-detail">45.800 km <span aria-hidden="true">·</span> Auto Center Sul</div></div>
+                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
+                  <span class="event-cost">R$ 620,00</span>
+                </article>
+                <article class="timeline-row">
+                  <div class="date-block"><span class="date-day">14</span><span class="date-month">mar</span></div>
+                  <div><div class="event-name">Alinhamento e balanceamento</div><div class="event-detail">42.300 km <span aria-hidden="true">·</span> Oficina Avenida</div></div>
+                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
+                  <span class="event-cost">R$ 180,00</span>
+                </article>
+              </div>
+            </section>
+
+            <div class="side-stack">
+              <section class="panel alert-card" aria-labelledby="alert-heading">
+                <div class="alert-heading">
+                  <div class="alert-symbol" aria-hidden="true">!</div>
+                  <div><div class="alert-label" id="alert-heading">Documentos do veículo</div><div class="alert-date">IPVA e licenciamento 2026</div></div>
+                </div>
+                <p>Consulte os vencimentos do IPVA e do licenciamento conforme o seu estado. As datas dependem do calendário oficial.</p>
+                <div class="alert-actions">
+                  <button class="primary-button" data-toast="Lembrete de licenciamento marcado como acompanhado.">Marcar como visto</button>
+                  <button class="secondary-button" data-toast="Consulte o portal oficial do Detran do seu estado.">Ver detalhes</button>
+                </div>
+              </section>
+              <section class="panel health" aria-labelledby="health-heading">
+                <div class="health-top"><h2 class="panel-title" id="health-heading">Prontuário do veículo</h2><span class="health-number">Bem cuidado</span></div>
+                <div class="health-track" role="img" aria-label="Indicador ilustrativo de histórico bem cuidado"><div class="health-fill"></div></div>
+                <div class="health-caption">Manutenções registradas ajudam a manter o histórico organizado para uma futura revenda.</div>
+              </section>
+            </div>
+          </div>
+
+          <div class="bottom-grid">
+            <section class="panel" aria-labelledby="summary-heading">
+              <div class="panel-header"><h2 class="panel-title" id="summary-heading">Resumo de manutenção</h2><span class="breadcrumb">Últimos 12 meses</span></div>
+              <div class="summary-content">
+                <div class="summary-metric"><div class="summary-label">Serviços registrados</div><div class="summary-value" id="service-count">6</div><div class="summary-note">No seu histórico</div></div>
+                <div class="summary-metric"><div class="summary-label">Investimento registrado</div><div class="summary-value">R$ 2.148</div><div class="summary-note">Soma dos serviços cadastrados</div></div>
+              </div>
+            </section>
+            <section class="panel" aria-labelledby="next-heading">
+              <div class="panel-header"><h2 class="panel-title" id="next-heading">Próximo cuidado</h2><button class="panel-link" data-toast="Lembrete de revisão configurado para 50.000 km.">Criar lembrete</button></div>
+              <div class="next-content">
+                <div class="next-icon" aria-hidden="true">R</div>
+                <div><div class="next-name">Revisão periódica</div><div class="next-detail">Aos 50.000 km <span aria-hidden="true">·</span> Faltam 1.740 km</div></div>
+              </div>
+            </section>
+          </div>
+          <footer class="print-only print-footer">Protótipo demonstrativo. Dados fictícios para apresentação da interface.</footer>
+        </section>
+
+        <section class="view wireframe-page" id="wireframe" aria-labelledby="wireframe-title">
+          <div class="print-only print-cover-title"><h1>Hub Digital de Manutenção e Histórico Veicular</h1><p>Protótipo de baixa fidelidade · Wireframe da visão geral</p></div>
+          <div class="section-heading">
+            <h1 id="wireframe-title">Wireframe da visão geral</h1>
+            <p>Estrutura de baixa fidelidade para validar hierarquia, conteúdo e ações principais antes do acabamento visual.</p>
+          </div>
+          <div class="wireframe-note"><strong>Como ler:</strong> caixas tracejadas representam grupos de conteúdo; hachuras representam áreas de imagem; os rótulos descrevem componentes previstos. A estrutura corresponde à tela de alta fidelidade.</div>
+          <div class="wireframe-board" aria-label="Esboço estrutural da tela principal">
+            <div class="wf-nav"><span>MARCA + NAVEGAÇÃO</span><span>PERFIL / NOTIFICAÇÕES</span></div>
+            <div class="wf-block" style="margin-top:12px">
+              <h2>CABEÇALHO DA PÁGINA</h2>
+              <div class="wf-row"><span>Saudação e contexto do veículo</span><span class="wf-action">AÇÃO PRINCIPAL: registrar manutenção</span></div>
+            </div>
+            <div class="wf-block wf-vehicle" style="margin-top:12px">
+              <div class="wf-copy"><strong>IDENTIFICAÇÃO DO VEÍCULO</strong><br>Modelo, ano e placa<br>Quilometragem e próxima revisão</div>
+              <div class="wf-image" aria-label="Área reservada para imagem do veículo"></div>
+            </div>
+            <div class="wf-main">
+              <div class="wf-block wf-events"><h2>HISTÓRICO RECENTE</h2>
+                <div class="wf-row"><span>Data / Serviço / Oficina</span><span>Status / Valor</span></div>
+                <div class="wf-row"><span>Data / Serviço / Oficina</span><span>Status / Valor</span></div>
+                <div class="wf-row"><span>Data / Serviço / Oficina</span><span>Status / Valor</span></div>
+              </div>
+              <div class="wf-side">
+                <div class="wf-block wf-alert"><h2>ALERTA DE DOCUMENTO</h2><div class="wf-copy">Vencimento e orientação<br>Ação para consultar ou marcar</div></div>
+                <div class="wf-block"><h2>PRONTUÁRIO</h2><div class="wf-copy">Resumo e orientação de valor</div></div>
+              </div>
+            </div>
+            <div class="wf-bottom">
+              <div class="wf-block wf-metric"><h2>RESUMO DE MANUTENÇÃO</h2><div class="wf-copy">Serviços registrados / gastos</div></div>
+              <div class="wf-block wf-metric"><h2>PRÓXIMO CUIDADO</h2><div class="wf-copy">Revisão e ação para lembrete</div></div>
+            </div>
+          </div>
+          <footer class="print-only print-footer">Wireframe estrutural para discussão e validação dos requisitos.</footer>
+        </section>
+
+        <section class="view" id="requirements" aria-labelledby="requirements-title">
+          <div class="section-heading">
+            <h1 id="requirements-title">Entendimento de requisitos</h1>
+            <p>Escopo inicial proposto para o prontuário digital e os alertas do veículo.</p>
+          </div>
+          <div class="requirements-grid">
+            <article class="panel requirement-panel">
+              <h2>Problema e oportunidade</h2>
+              <p>Informações de revisões, peças, despesas e documentos costumam ficar dispersas entre notas, mensagens e lembranças. O produto centraliza esse histórico e oferece lembretes úteis para facilitar o cuidado e a apresentação do veículo na revenda.</p>
+            </article>
+            <article class="panel requirement-panel">
+              <h2>Público e hipótese de uso</h2>
+              <p>Motoristas particulares que querem acompanhar custos e revisões sem conhecimento técnico avançado. Hipótese de design: uma visão geral por veículo, com linguagem simples, próximos passos visíveis e registro rápido de serviços, reduz o esforço para manter o histórico atualizado.</p>
+            </article>
+            <article class="panel requirement-panel">
+              <h2>Requisitos funcionais</h2>
+              <ul>
+                <li><span class="priority">RF01</span> Cadastrar veículo com marca, modelo, ano, placa e quilometragem.</li>
+                <li><span class="priority">RF02</span> Registrar serviço, data, odômetro, oficina, valor e observações.</li>
+                <li><span class="priority">RF03</span> Consultar histórico de revisões, serviços e peças trocadas por veículo.</li>
+                <li><span class="priority">RF04</span> Configurar lembretes de manutenção por data ou quilometragem.</li>
+                <li><span class="priority">RF05</span> Acompanhar datas de IPVA e licenciamento, com estado e ano informados pelo usuário.</li>
+                <li><span class="priority">RF06</span> Anexar comprovantes e consultar o resumo de despesas.</li>
+              </ul>
+            </article>
+            <article class="panel requirement-panel">
+              <h2>Requisitos não funcionais</h2>
+              <ul>
+                <li><span class="priority">RNF01</span> Interface responsiva para celular e computador.</li>
+                <li><span class="priority">RNF02</span> Rótulos explícitos, navegação por teclado e mensagens de validação legíveis.</li>
+                <li><span class="priority">RNF03</span> Proteção dos dados pessoais e dos documentos do veículo.</li>
+                <li><span class="priority">RNF04</span> Datas, moeda e textos adaptados ao português do Brasil.</li>
+                <li><span class="priority">RNF05</span> Alertas com origem e validade claras, evitando apresentar estimativas como dados oficiais.</li>
+              </ul>
+            </article>
+            <article class="panel requirement-panel">
+              <h2>Fluxo prioritário</h2>
+              <ul>
+                <li>Adicionar um veículo e informar a quilometragem atual.</li>
+                <li>Ver a visão geral com histórico recente e pendências.</li>
+                <li>Registrar uma manutenção realizada e seus detalhes.</li>
+                <li>Configurar lembretes para documentos e próxima revisão.</li>
+                <li>Consultar o prontuário organizado antes de vender o veículo.</li>
+              </ul>
+            </article>
+            <article class="panel requirement-panel">
+              <h2>Critérios de aceite essenciais</h2>
+              <ul>
+                <li>Um novo serviço deve exigir tipo, data e quilometragem válidos.</li>
+                <li>Após salvar, o serviço deve aparecer no histórico e atualizar a contagem.</li>
+                <li>O usuário deve identificar claramente o vencimento e a ação relacionada.</li>
+                <li>Os dados continuam legíveis em telas estreitas e com teclado.</li>
+              </ul>
+            </article>
+          </div>
+          <div class="notice"><strong>Limite dos dados disponíveis:</strong> o briefing descreve a proposta, mas não inclui entrevistas, questionários ou dados de uso. Público, necessidades e critérios acima são hipóteses iniciais para validação com motoristas antes de fechar o escopo.</div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="entry-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-head"><h2 id="dialog-title">Registrar manutenção</h2><p>Adicione um serviço ao prontuário do seu veículo.</p></div>
+    <form class="dialog-body" id="entry-form" novalidate>
+      <div class="form-field"><label for="service">Serviço realizado</label><input id="service" name="service" required maxlength="70" placeholder="Ex.: troca de óleo" aria-describedby="service-error"><div class="form-error" id="service-error"></div></div>
+      <div class="form-field"><label for="service-date">Data</label><input id="service-date" name="date" type="date" required aria-describedby="date-error"><div class="form-error" id="date-error"></div></div>
+      <div class="form-field"><label for="odometer">Quilometragem (km)</label><input id="odometer" name="odometer" type="number" min="0" max="9999999" required placeholder="Ex.: 48260" aria-describedby="odometer-error"><div class="form-error" id="odometer-error"></div></div>
+      <div class="form-field"><label for="workshop">Oficina (opcional)</label><input id="workshop" name="workshop" maxlength="70" placeholder="Nome da oficina"></div>
+      <div class="form-field"><label for="amount">Valor (R$)</label><input id="amount" name="amount" type="number" min="0" max="999999" step="0.01" placeholder="Ex.: 250,00" aria-describedby="amount-error"><div class="form-error" id="amount-error"></div></div>
+      <div class="dialog-actions"><button type="button" class="secondary-button" id="close-dialog">Cancelar</button><button type="submit" class="primary-button">Salvar registro</button></div>
+    </form>
+  </dialog>
+  <script src="app.js" defer></script>
+</body>
+</html>
