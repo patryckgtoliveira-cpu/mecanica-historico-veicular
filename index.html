@@ -139,27 +139,12 @@
 
           <div class="overview-grid">
             <section class="panel" aria-labelledby="history-heading">
-              <div class="panel-header"><h2 class="panel-title" id="history-heading">Histórico recente</h2><button class="panel-link" data-toast="O histórico completo estará disponível na próxima etapa do produto.">Ver histórico completo</button></div>
-              <div class="timeline" id="timeline">
-                <article class="timeline-row">
-                  <div class="date-block"><span class="date-day">18</span><span class="date-month">ago</span></div>
-                  <div><div class="event-name">Troca de óleo e filtro</div><div class="event-detail">48.120 km <span aria-hidden="true">·</span> Oficina Avenida</div></div>
-                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
-                  <span class="event-cost">R$ 389,90</span>
-                </article>
-                <article class="timeline-row">
-                  <div class="date-block"><span class="date-day">02</span><span class="date-month">jun</span></div>
-                  <div><div class="event-name">Revisão dos freios</div><div class="event-detail">45.800 km <span aria-hidden="true">·</span> Auto Center Sul</div></div>
-                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
-                  <span class="event-cost">R$ 620,00</span>
-                </article>
-                <article class="timeline-row">
-                  <div class="date-block"><span class="date-day">14</span><span class="date-month">mar</span></div>
-                  <div><div class="event-name">Alinhamento e balanceamento</div><div class="event-detail">42.300 km <span aria-hidden="true">·</span> Oficina Avenida</div></div>
-                  <span class="status status-done"><span class="status-dot"></span>Concluída</span>
-                  <span class="event-cost">R$ 180,00</span>
-                </article>
+              <div class="panel-header history-header">
+                <h2 class="panel-title" id="history-heading">Serviços realizados nos últimos 12 meses</h2>
+                <span class="sample-badge">Exemplo ilustrativo</span>
+                <button class="panel-link" data-toast="O histórico completo estará disponível na próxima etapa do produto.">Ver histórico completo</button>
               </div>
+              <div class="timeline" id="timeline" aria-live="polite"></div>
             </section>
 
             <div class="side-stack">
@@ -186,8 +171,8 @@
             <section class="panel" aria-labelledby="summary-heading">
               <div class="panel-header"><h2 class="panel-title" id="summary-heading">Resumo de manutenção</h2><span class="breadcrumb">Últimos 12 meses</span></div>
               <div class="summary-content">
-                <div class="summary-metric"><div class="summary-label">Serviços registrados</div><div class="summary-value" id="service-count">6</div><div class="summary-note">No seu histórico</div></div>
-                <div class="summary-metric"><div class="summary-label">Investimento registrado</div><div class="summary-value">R$ 2.148</div><div class="summary-note">Soma dos serviços cadastrados</div></div>
+                <div class="summary-metric"><div class="summary-label">Serviços realizados</div><div class="summary-value" id="service-count">6</div><div class="summary-note">Nos últimos 12 meses</div></div>
+                <div class="summary-metric"><div class="summary-label">Investimento no período</div><div class="summary-value" id="maintenance-total">R$ 2.148,00</div><div class="summary-note">Soma dos valores informados</div></div>
               </div>
             </section>
             <section class="panel" aria-labelledby="next-heading">

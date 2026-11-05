@@ -22,9 +22,61 @@ const customWorkshopInput = document.querySelector("#custom-workshop");
 const toast = document.querySelector("#toast");
 const timeline = document.querySelector("#timeline");
 const serviceCount = document.querySelector("#service-count");
+const maintenanceTotal = document.querySelector("#maintenance-total");
 const userSettingsKey = "garagem.user-settings";
 const commonsApi = "https://commons.wikimedia.org/w/api.php";
 const revisionInterval = 10000;
+const sampleMaintenanceEntries = [
+  {
+    maintenanceType: "Troca de óleo e filtro",
+    service: "Óleo do motor e filtro substituídos",
+    date: dateMonthsAgo(1, 18),
+    odometer: 48120,
+    workshop: "Oficina Avenida",
+    amount: 389.9
+  },
+  {
+    maintenanceType: "Freios (pastilhas ou discos)",
+    service: "Pastilhas dianteiras verificadas e substituídas",
+    date: dateMonthsAgo(3, 2),
+    odometer: 46800,
+    workshop: "Auto Center Sul",
+    amount: 620
+  },
+  {
+    maintenanceType: "Pneus, alinhamento e balanceamento",
+    service: "Alinhamento e balanceamento das rodas",
+    date: dateMonthsAgo(5, 14),
+    odometer: 45500,
+    workshop: "Oficina Avenida",
+    amount: 180
+  },
+  {
+    maintenanceType: "Pneus, alinhamento e balanceamento",
+    service: "Dois pneus dianteiros substituídos",
+    date: dateMonthsAgo(7, 22),
+    odometer: 44100,
+    workshop: "Auto Center Sul",
+    amount: 425
+  },
+  {
+    maintenanceType: "Bateria",
+    service: "Bateria testada e substituída",
+    date: dateMonthsAgo(9, 10),
+    odometer: 42300,
+    workshop: "Mecânica Central",
+    amount: 238.1
+  },
+  {
+    maintenanceType: "Revisão periódica",
+    service: "Revisão e troca de filtros",
+    date: dateMonthsAgo(11, 16),
+    odometer: 40000,
+    workshop: "Oficina Avenida",
+    amount: 295
+  }
+];
+let maintenanceEntries = [...sampleMaintenanceEntries];
 const vehicleCatalog = {
   palio: { make: "Fiat", body: "hatchback" },
   uno: { make: "Fiat", body: "hatchback" },
@@ -560,8 +612,59 @@ function formatDateParts(value) {
     day: new Intl.DateTimeFormat("pt-BR", { day: "2-digit" }).format(date),
     month: new Intl.DateTimeFormat("pt-BR", { month: "short" })
       .format(date)
-      .replace(".", "")
+      .replace(".", ""),
+    accessible: new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(date)
   };
+}
+
+function dateMonthsAgo(monthsAgo, day) {
+  const today = new Date();
+  const targetMonth = new Date(today.getFullYear(), today.getMonth() - monthsAgo, 1);
+  const lastDayOfMonth = new Date(
+    targetMonth.getFullYear(),
+    targetMonth.getMonth() + 1,
+    0
+  ).getDate();
+  targetMonth.setDate(Math.min(day, lastDayOfMonth));
+
+  return [
+    targetMonth.getFullYear(),
+    String(targetMonth.getMonth() + 1).padStart(2, "0"),
+    String(targetMonth.getDate()).padStart(2, "0")
+  ].join("-");
+}
+
+function getRecentMaintenanceEntries(entries) {
+  const today = dateMonthsAgo(0, new Date().getDate());
+  const periodStart = dateMonthsAgo(12, new Date().getDate());
+  return entries
+    .filter(entry => entry.date >= periodStart && entry.date <= today)
+    .sort((first, second) => second.date.localeCompare(first.date));
+}
+
+function renderTimeline() {
+  const recentEntries = getRecentMaintenanceEntries(maintenanceEntries);
+  timeline.replaceChildren();
+
+  if (recentEntries.length === 0) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "timeline-empty";
+    emptyState.textContent = "Nenhum serviço registrado nos últimos 12 meses.";
+    timeline.append(emptyState);
+  } else {
+    const entriesFragment = document.createDocumentFragment();
+    recentEntries.forEach(entry => {
+      entriesFragment.append(createTimelineEntry(entry));
+    });
+    timeline.append(entriesFragment);
+  }
+
+  serviceCount.textContent = String(recentEntries.length);
+  const total = recentEntries.reduce((sum, entry) => sum + (Number(entry.amount) || 0), 0);
+  maintenanceTotal.textContent = total.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
 }
 
 function createTimelineEntry({ maintenanceType, service, date, odometer, workshop, amount }) {
@@ -569,8 +672,11 @@ function createTimelineEntry({ maintenanceType, service, date, odometer, worksho
   entry.className = "timeline-row";
 
   const dateParts = formatDateParts(date);
-  const dateBlock = document.createElement("div");
+  const dateBlock = document.createElement("time");
   dateBlock.className = "date-block";
+  dateBlock.dateTime = date;
+  dateBlock.setAttribute("aria-label", dateParts.accessible);
+  dateBlock.title = dateParts.accessible;
   const dateDay = document.createElement("span");
   dateDay.className = "date-day";
   dateDay.textContent = dateParts.day;
@@ -690,8 +796,8 @@ function handleEntrySubmit(event) {
     renderVehicle();
   }
 
-  timeline.prepend(createTimelineEntry(entry));
-  serviceCount.textContent = String(Number(serviceCount.textContent) + 1);
+  maintenanceEntries.push(entry);
+  renderTimeline();
   form.reset();
   clearValidationErrors();
   dialog.close();
@@ -768,4 +874,5 @@ form.addEventListener("submit", handleEntrySubmit);
 updateAccountUI();
 renderPreferredWorkshop();
 renderVehicle();
+renderTimeline();
 initializePrintMode();
