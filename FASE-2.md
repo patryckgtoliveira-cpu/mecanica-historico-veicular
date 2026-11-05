@@ -80,7 +80,7 @@ O objetivo é testar se a ação prioritária está evidente e se a informação
 
 ## Protótipo de alta fidelidade
 
-O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão **Editar veículo** permite atualizar marca, modelo, versão, ano, combustível, placa e quilometragem, guardando os dados no navegador. O formulário de manutenção exige uma categoria, uma descrição, data e quilometragem e insere o registro no histórico local da sessão. O perfil demonstrativo aceita nome e e-mail, e a preferência da oficina pode ser selecionada da lista ou informada pelo usuário.
+O protótipo navegável também está em [index.html](./index.html), sem dependências externas. A opção **Visão geral** mostra a interface visual; os controles de navegação alternam para o wireframe e os requisitos. O botão **Editar veículo** permite atualizar marca, modelo, versão, ano, combustível, placa, quilometragem atual e quilometragem da última revisão, guardando os dados no navegador. Ao registrar uma revisão periódica, a quilometragem atual é atualizada e a próxima revisão é estimada para 10.000 km depois; essa estimativa deve ser conferida no manual do fabricante. O formulário de manutenção exige uma categoria, uma descrição, data e quilometragem e insere o registro no histórico local da sessão. O perfil demonstrativo aceita nome e e-mail, e a preferência da oficina pode ser selecionada da lista ou informada pelo usuário.
 
 ### Decisões de interface
 

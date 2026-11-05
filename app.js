@@ -23,6 +23,42 @@ const toast = document.querySelector("#toast");
 const timeline = document.querySelector("#timeline");
 const serviceCount = document.querySelector("#service-count");
 const userSettingsKey = "garagem.user-settings";
+const commonsApi = "https://commons.wikimedia.org/w/api.php";
+const revisionInterval = 10000;
+const vehicleCatalog = {
+  palio: { make: "Fiat", body: "hatchback" },
+  uno: { make: "Fiat", body: "hatchback" },
+  argo: { make: "Fiat", body: "hatchback" },
+  mobi: { make: "Fiat", body: "hatchback" },
+  gol: { make: "Volkswagen", body: "hatchback" },
+  fox: { make: "Volkswagen", body: "hatchback" },
+  polo: { make: "Volkswagen", body: "hatchback" },
+  onix: { make: "Chevrolet", body: "hatchback" },
+  hb20: { make: "Hyundai", body: "hatchback" },
+  kwid: { make: "Renault", body: "hatchback" },
+  sandero: { make: "Renault", body: "hatchback" },
+  fit: { make: "Honda", body: "hatchback" },
+  ka: { make: "Ford", body: "hatchback" },
+  "208": { make: "Peugeot", body: "hatchback" },
+  corolla: { make: "Toyota", body: "sedan" },
+  civic: { make: "Honda", body: "sedan" },
+  city: { make: "Honda", body: "sedan" },
+  prisma: { make: "Chevrolet", body: "sedan" },
+  cronos: { make: "Fiat", body: "sedan" },
+  virtus: { make: "Volkswagen", body: "sedan" },
+  versa: { make: "Nissan", body: "sedan" },
+  "hrv": { make: "Honda", body: "suv" },
+  "crv": { make: "Honda", body: "suv" },
+  creta: { make: "Hyundai", body: "suv" },
+  "tcross": { make: "Volkswagen", body: "suv" },
+  compass: { make: "Jeep", body: "suv" },
+  renegade: { make: "Jeep", body: "suv" },
+  tracker: { make: "Chevrolet", body: "suv" },
+  kicks: { make: "Nissan", body: "suv" },
+  duster: { make: "Renault", body: "suv" },
+  "corollacross": { make: "Toyota", body: "suv" },
+  ecosport: { make: "Ford", body: "suv" }
+};
 const defaultVehicle = {
   make: "Honda",
   model: "HR-V",
@@ -30,11 +66,14 @@ const defaultVehicle = {
   year: 2021,
   fuel: "Flex",
   plate: "ABC1D23",
-  odometer: 48260
+  odometer: 48260,
+  lastRevisionOdometer: 40000,
+  nextRevisionOdometer: 50000
 };
 
 let toastTimer;
 let userSettings = loadUserSettings();
+let vehiclePhotoController;
 
 function loadUserSettings() {
   try {
@@ -64,6 +103,19 @@ function loadUserSettings() {
 function normalizeVehicle(vehicle) {
   if (!vehicle || typeof vehicle !== "object") return { ...defaultVehicle };
 
+  const odometer = Number.isInteger(vehicle.odometer) ? vehicle.odometer : defaultVehicle.odometer;
+  const storedLastRevisionOdometer = Number.isInteger(vehicle.lastRevisionOdometer)
+    ? vehicle.lastRevisionOdometer
+    : null;
+  const nextRevisionOdometer = Number.isInteger(vehicle.nextRevisionOdometer)
+    ? vehicle.nextRevisionOdometer
+    : storedLastRevisionOdometer !== null
+      ? storedLastRevisionOdometer + revisionInterval
+      : Math.ceil((odometer + 1) / revisionInterval) * revisionInterval;
+  const lastRevisionOdometer = storedLastRevisionOdometer !== null
+    ? storedLastRevisionOdometer
+    : Math.max(0, nextRevisionOdometer - revisionInterval);
+
   return {
     make: typeof vehicle.make === "string" ? vehicle.make : defaultVehicle.make,
     model: typeof vehicle.model === "string" ? vehicle.model : defaultVehicle.model,
@@ -71,7 +123,9 @@ function normalizeVehicle(vehicle) {
     year: Number.isInteger(vehicle.year) ? vehicle.year : defaultVehicle.year,
     fuel: typeof vehicle.fuel === "string" ? vehicle.fuel : defaultVehicle.fuel,
     plate: typeof vehicle.plate === "string" ? vehicle.plate : defaultVehicle.plate,
-    odometer: Number.isInteger(vehicle.odometer) ? vehicle.odometer : defaultVehicle.odometer
+    odometer,
+    lastRevisionOdometer,
+    nextRevisionOdometer
   };
 }
 
@@ -144,18 +198,169 @@ function renderPreferredWorkshop() {
 }
 
 function renderVehicle() {
-  const { make, model, version, year, fuel, plate, odometer } = userSettings.vehicle;
+  const { make, model, version, year, fuel, plate, odometer, nextRevisionOdometer } = userSettings.vehicle;
+  const vehicleVisual = document.querySelector("#vehicle-visual");
+  const vehicleProfile = vehicleCatalog[normalizeVehicleModel(model)];
+  const remainingDistance = nextRevisionOdometer - odometer;
+  const nextRevisionText = remainingDistance > 0
+    ? `Aos ${nextRevisionOdometer.toLocaleString("pt-BR")} km · faltam ${remainingDistance.toLocaleString("pt-BR")} km`
+    : remainingDistance === 0
+      ? `Revisão prevista agora · ${nextRevisionOdometer.toLocaleString("pt-BR")} km`
+      : `Revisão atrasada há ${Math.abs(remainingDistance).toLocaleString("pt-BR")} km · prevista aos ${nextRevisionOdometer.toLocaleString("pt-BR")} km`;
   document.querySelector("#vehicle-name").textContent = [make, model, version]
     .filter(Boolean)
     .join(" ");
   document.querySelector("#vehicle-summary").textContent = `${year} · ${fuel} · ${plate}`;
   document.querySelector("#vehicle-odometer").textContent =
     `${odometer.toLocaleString("pt-BR")} km`;
+  document.querySelector("#next-revision").textContent = nextRevisionText;
+  document.querySelector("#next-revision-detail").textContent = nextRevisionText;
+  document.querySelector("#create-revision-reminder").dataset.toast =
+    `Lembrete de revisão configurado para ${nextRevisionOdometer.toLocaleString("pt-BR")} km.`;
+  vehicleVisual.dataset.body = vehicleProfile?.body || "generic";
+  document.querySelector("#vehicle-image-label").textContent = `${make} ${model}`;
+  document.querySelector("#vehicle-photo").alt =
+    `Foto de referência de ${make} ${model}; ano ou versão podem variar.`;
+  renderVehiclePhoto({ make, model });
+}
+
+function normalizeVehicleModel(model) {
+  return model
+    .toLocaleLowerCase("pt-BR")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f\s-]/g, "");
+}
+
+function getVehiclePhoto(pages, model) {
+  const normalizedModel = normalizeVehicleModel(model);
+  const excludedTitleTerms = /\b(weekend|rally|racing|race|motorsport|competition|championship|concept|toy|logo|badge|emblem|drawing|diecast|miniature|tn|tc|dtm)\b/i;
+  const candidates = Object.values(pages || {})
+    .map(page => {
+      const imageInfo = page.imageinfo?.[0];
+      const metadata = imageInfo?.extmetadata || {};
+      return {
+        title: page.title || "",
+        imageUrl: imageInfo?.thumburl,
+        sourceUrl: imageInfo?.descriptionurl,
+        author: metadata.Artist?.value,
+        licenseUrl: metadata.LicenseUrl?.value,
+        license: metadata.LicenseShortName?.value
+      };
+    })
+    .filter(candidate => {
+      const normalizedTitle = normalizeVehicleModel(candidate.title);
+      const isModelMatch = normalizedModel.length <= 2
+        ? candidate.title.toLocaleLowerCase("pt-BR").split(/[^a-z0-9]+/).includes(normalizedModel)
+        : normalizedTitle.includes(normalizedModel);
+      const hasAllowedLicense = /^CC BY(?:-SA)? [0-9.]+$|^CC0$|^Public domain$/i
+        .test(candidate.license || "");
+      return isModelMatch && !excludedTitleTerms.test(candidate.title) &&
+        hasAllowedLicense && candidate.imageUrl && candidate.sourceUrl;
+    });
+
+  return candidates[0];
+}
+
+async function renderVehiclePhoto(vehicle) {
+  vehiclePhotoController?.abort();
+  const controller = new AbortController();
+  vehiclePhotoController = controller;
+  const image = document.querySelector("#vehicle-photo");
+  const credit = document.querySelector("#vehicle-photo-credit");
+  const sourceLink = document.querySelector("#vehicle-photo-source");
+  const licenseLink = document.querySelector("#vehicle-photo-license");
+  const visual = document.querySelector("#vehicle-visual");
+  const status = document.querySelector("#vehicle-image-status");
+  visual.dataset.photo = "loading";
+  status.textContent = "Buscando foto...";
+  credit.hidden = true;
+  sourceLink.removeAttribute("href");
+  sourceLink.textContent = "";
+  licenseLink.removeAttribute("href");
+  licenseLink.textContent = "";
+  image.hidden = true;
+  image.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
+  try {
+    const parameters = new URLSearchParams({
+      action: "query",
+      generator: "search",
+      gsrnamespace: "6",
+      gsrsearch: `${vehicle.make} ${vehicle.model} car`,
+      gsrwhat: "text",
+      gsrorder: "relevance",
+      gsrlimit: "20",
+      prop: "imageinfo",
+      iiprop: "url|extmetadata",
+      iiextmetadatafilter: "Artist|LicenseShortName|LicenseUrl",
+      iiurlwidth: "900",
+      origin: "*",
+      format: "json"
+    });
+    const response = await fetch(`${commonsApi}?${parameters}`, {
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Wikimedia Commons respondeu ${response.status}.`);
+
+    const data = await response.json();
+    const photo = getVehiclePhoto(data.query?.pages, vehicle.model);
+    if (!photo) throw new Error(`Nenhuma foto licenciada encontrada para ${vehicle.make} ${vehicle.model}.`);
+
+    const photoUrl = new URL(photo.imageUrl);
+    const sourceUrl = new URL(photo.sourceUrl);
+    const licenseUrl = new URL(
+      photo.licenseUrl || "https://commons.wikimedia.org/wiki/Commons:Licensing"
+    );
+    if (!["thumb.wikimedia.org", "upload.wikimedia.org"].includes(photoUrl.hostname) ||
+        sourceUrl.hostname !== "commons.wikimedia.org" ||
+        !["creativecommons.org", "commons.wikimedia.org"].includes(licenseUrl.hostname)) {
+      throw new Error("A origem da foto não é reconhecida.");
+    }
+
+    const author = photo.author
+      ? new DOMParser().parseFromString(photo.author, "text/html").body.textContent.trim()
+      : "Wikimedia Commons";
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(new Error("A foto encontrada não pôde ser carregada."));
+      image.src = photoUrl.href;
+    });
+    if (controller.signal.aborted || vehiclePhotoController !== controller) return;
+
+    image.hidden = false;
+    visual.dataset.photo = "loaded";
+    status.textContent = "Foto de referência";
+    sourceLink.href = sourceUrl.href;
+    sourceLink.textContent = `Foto: ${author}`;
+    licenseLink.href = licenseUrl.href;
+    licenseLink.textContent = photo.license;
+    credit.hidden = false;
+  } catch (error) {
+    if (controller.signal.aborted) return;
+    console.error("Não foi possível carregar uma foto licenciada para o veículo.", error);
+    visual.dataset.photo = "unavailable";
+    status.textContent = "Foto indisponível · ilustração";
+  }
+}
+
+function updateVehicleMakeFromModel() {
+  const model = vehicleForm.elements.model.value.trim();
+  const isDifferentModel = model !== userSettings.vehicle.model;
+  const isSavedVersion = vehicleForm.elements.version.value === userSettings.vehicle.version;
+  if (isDifferentModel && isSavedVersion) {
+    vehicleForm.elements.version.value = "";
+  }
+
+  const vehicleProfile = vehicleCatalog[normalizeVehicleModel(model)];
+  if (vehicleProfile) vehicleForm.elements.make.value = vehicleProfile.make;
 }
 
 function openVehicleDialog() {
   Object.entries(userSettings.vehicle).forEach(([field, value]) => {
-    vehicleForm.elements[field].value = String(value);
+    const control = vehicleForm.elements.namedItem(field);
+    if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement) {
+      control.value = String(value);
+    }
   });
   clearVehicleErrors();
   vehicleDialog.showModal();
@@ -181,6 +386,8 @@ function validateVehicle() {
   const plate = vehicleForm.elements.plate.value.trim().toLocaleUpperCase("pt-BR");
   const rawOdometer = vehicleForm.elements.odometer.value;
   const odometer = Number(rawOdometer);
+  const rawLastRevisionOdometer = vehicleForm.elements.lastRevisionOdometer.value;
+  const lastRevisionOdometer = Number(rawLastRevisionOdometer);
   const currentYear = new Date().getFullYear();
 
   return {
@@ -193,8 +400,12 @@ function validateVehicle() {
     plate: /^(?:[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z0-9][0-9]{2})$/.test(plate)
       ? ""
       : "Informe uma placa válida (ex.: ABC1D23).",
-    odometer: !rawOdometer || !Number.isInteger(odometer) || odometer < 0
+    odometer: !rawOdometer || !Number.isInteger(odometer) || odometer < 0 || odometer > 9999999
       ? "Informe uma quilometragem inteira válida."
+      : "",
+    lastRevisionOdometer: !rawLastRevisionOdometer || !Number.isInteger(lastRevisionOdometer) ||
+      lastRevisionOdometer < 0 || lastRevisionOdometer > 9999999 || lastRevisionOdometer > odometer
+      ? "Informe a quilometragem da revisão, igual ou menor que a quilometragem atual."
       : ""
   };
 }
@@ -214,6 +425,13 @@ function handleVehicleSubmit(event) {
     return;
   }
 
+  const odometer = Number(vehicleForm.elements.odometer.value);
+  if (odometer < userSettings.vehicle.odometer &&
+      !window.confirm("A quilometragem informada é menor que a salva. Deseja confirmar essa correção?")) {
+    vehicleForm.elements.odometer.focus();
+    return;
+  }
+  const lastRevisionOdometer = Number(vehicleForm.elements.lastRevisionOdometer.value);
   const nextSettings = {
     ...userSettings,
     vehicle: {
@@ -223,7 +441,9 @@ function handleVehicleSubmit(event) {
       year: Number(vehicleForm.elements.year.value),
       fuel: vehicleForm.elements.fuel.value,
       plate: vehicleForm.elements.plate.value.trim().toLocaleUpperCase("pt-BR"),
-      odometer: Number(vehicleForm.elements.odometer.value)
+      odometer,
+      lastRevisionOdometer,
+      nextRevisionOdometer: lastRevisionOdometer + revisionInterval
     }
   };
   if (!saveUserSettings(nextSettings)) return;
@@ -400,7 +620,7 @@ function validateEntry() {
     maintenanceType: maintenanceType ? "" : "Selecione o tipo de manutenção.",
     service: !service ? "Informe o serviço realizado." : "",
     date: !date ? "Informe a data do serviço." : "",
-    odometer: !rawOdometer || !Number.isFinite(odometer) || odometer < 0
+    odometer: !rawOdometer || !Number.isInteger(odometer) || odometer < 0 || odometer > 9999999
       ? "Informe uma quilometragem válida."
       : "",
     amount: amount && (!Number.isFinite(Number(amount)) || Number(amount) < 0)
@@ -451,12 +671,35 @@ function handleEntrySubmit(event) {
     amount: form.elements.amount.value
   };
 
+  const isRevision = entry.maintenanceType === "Revisão periódica";
+  const updatesRevisionSchedule = isRevision &&
+    entry.odometer >= userSettings.vehicle.lastRevisionOdometer;
+  if (updatesRevisionSchedule || entry.odometer > userSettings.vehicle.odometer) {
+    const lastRevisionOdometer = updatesRevisionSchedule
+      ? entry.odometer
+      : userSettings.vehicle.lastRevisionOdometer;
+    const vehicle = {
+      ...userSettings.vehicle,
+      odometer: Math.max(userSettings.vehicle.odometer, entry.odometer),
+      lastRevisionOdometer,
+      nextRevisionOdometer: updatesRevisionSchedule
+        ? entry.odometer + revisionInterval
+        : userSettings.vehicle.nextRevisionOdometer
+    };
+    if (!saveUserSettings({ ...userSettings, vehicle })) return;
+    renderVehicle();
+  }
+
   timeline.prepend(createTimelineEntry(entry));
   serviceCount.textContent = String(Number(serviceCount.textContent) + 1);
   form.reset();
   clearValidationErrors();
   dialog.close();
-  showToast("Manutenção registrada no prontuário.");
+  showToast(updatesRevisionSchedule
+    ? `Revisão registrada. Próxima revisão aos ${(entry.odometer + revisionInterval).toLocaleString("pt-BR")} km.`
+    : isRevision
+      ? "Revisão anterior registrada. A previsão atual foi mantida."
+    : "Manutenção registrada no prontuário.");
 }
 
 function openEntryDialog() {
@@ -467,6 +710,7 @@ function openEntryDialog() {
     String(today.getDate()).padStart(2, "0")
   ].join("-");
   form.elements.workshop.value = userSettings.workshop;
+  form.elements.odometer.value = String(userSettings.vehicle.odometer);
   clearValidationErrors();
   dialog.showModal();
   form.elements.maintenanceType.focus();
@@ -498,6 +742,7 @@ vehicleDialog.addEventListener("click", event => {
   if (event.target === vehicleDialog) vehicleDialog.close();
 });
 vehicleForm.addEventListener("submit", handleVehicleSubmit);
+vehicleForm.elements.model.addEventListener("input", updateVehicleMakeFromModel);
 document.querySelectorAll("[data-open-account]").forEach(button => {
   button.addEventListener("click", openAccountDialog);
 });

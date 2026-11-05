@@ -104,7 +104,7 @@
     .vehicle-subtitle { color: var(--muted); font-size: 12px; }
     .vehicle-stats { display: flex; gap: 32px; margin-top: 24px; }
     .stat-label { color: var(--muted); font-size: 11px; }
-    .stat-value { margin-top: 5px; font-size: 14px; font-weight: 700; }
+    .stat-value { margin-top: 5px; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
     .vehicle-visual {
       position: relative; min-height: 210px; overflow: hidden;
       background: linear-gradient(115deg, #e8eeea, #d9e5de);
@@ -115,12 +115,35 @@
     }
     .vehicle-visual::before { right: -60px; top: 4px; }
     .vehicle-visual::after { right: -23px; top: 25px; }
+    .vehicle-photo { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .vehicle-photo[hidden], .vehicle-photo-credit[hidden] { display: none; }
+    .vehicle-visual[data-photo="loaded"]::before, .vehicle-visual[data-photo="loaded"]::after { display: none; }
+    .vehicle-visual[data-photo="loaded"] .car-art { display: none; }
     .car-art { position: absolute; z-index: 1; width: min(88%, 430px); height: auto; right: 3%; bottom: 15px; }
+    .car-shape { display: none; }
+    .vehicle-visual[data-body="generic"] .car-shape--generic,
+    .vehicle-visual[data-body="hatchback"] .car-shape--hatchback,
+    .vehicle-visual[data-body="sedan"] .car-shape--sedan,
+    .vehicle-visual[data-body="suv"] .car-shape--generic { display: initial; }
     .vehicle-tag {
       position: absolute; z-index: 2; right: 20px; top: 18px; padding: 7px 10px;
       border: 1px solid rgb(255 255 255 / 80%); border-radius: 20px;
-      color: #335342; background: rgb(255 255 255 / 65%); font-size: 10px; font-weight: 700;
+      color: #335342; background: rgb(255 255 255 / 65%); font-size: 11px; font-weight: 700;
     }
+    .vehicle-model-label {
+      position: absolute; z-index: 2; left: 18px; bottom: 16px; max-width: calc(100% - 36px);
+      overflow: hidden; padding: 7px 10px; border: 1px solid rgb(255 255 255 / 80%);
+      border-radius: 7px; color: #294c38; background: rgb(255 255 255 / 78%);
+      font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .vehicle-visual[data-photo="loaded"] .vehicle-model-label { max-width: 46%; }
+    .vehicle-photo-credit {
+      position: absolute; z-index: 2; right: 12px; bottom: 12px; max-width: 48%;
+      display: flex; gap: 4px; overflow: hidden; padding: 6px 8px; border-radius: 6px;
+      color: #294c38; background: rgb(255 255 255 / 90%); font-size: 11px;
+      font-weight: 650; white-space: nowrap;
+    }
+    .vehicle-photo-credit a { overflow: hidden; color: inherit; text-overflow: ellipsis; }
 
     .workshop-panel { margin-bottom: 19px; }
     .workshop-panel .panel-header { align-items: flex-start; }
@@ -176,7 +199,8 @@
     .next-content { padding: 17px 19px; display: flex; align-items: center; gap: 13px; }
     .next-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; color: var(--accent); background: var(--accent-soft); font-weight: 800; }
     .next-name { font-size: 11px; font-weight: 700; }
-    .next-detail { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .next-detail { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .next-note { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.4; }
 
     .view { display: none; }
     .view.active { display: block; }
@@ -238,6 +262,7 @@
       border-radius: 8px; background: white; color: var(--ink); font-size: 12px;
     }
     .form-error { min-height: 15px; color: var(--danger); font-size: 10px; }
+    .form-hint { color: var(--muted); font-size: 10px; line-height: 1.45; }
     .vehicle-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; }
     .vehicle-odometer-field { grid-column: 1 / -1; }
     .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 17px; }
